@@ -33,9 +33,21 @@ gameMain.prototype = {
 	        font: '32px', fill: '#0ff', fontWeight: 'bold', align: 'center'
 	    });
         
-        useClick = this.add.text(70, 480, '* Plug in your Makeymakey with a USB 2.0 adapter\n * Instruments play pentatonic notes, tap the input images to test sounds \n * Reamp click to Q to have it play random notes', {
+        useClick = this.add.text(40, 480, '* Plug in your Makeymakey with a USB 2.0 adapter\n * Instruments play pentatonic notes, tap the input images to test sounds \n * Reamp click to Q to have it play random notes', {
 	        font: '24px', fill: '#ffa'
 	    });
+        
+        tempoText = this.add.text(600, 50, 'TEMPO: ' + TEMPO, {
+	        font: '24px', fill: '#040', fontWeight: 'bold'
+	    });
+		tempoText.inputEnabled = true;
+		tempoText.events.onInputDown.add(function(){
+			TEMPO += 40;
+			if (TEMPO > 280){
+				TEMPO = 40;
+			}
+			tempoText.text = 'TEMPO: ' + TEMPO;
+		}, this);
         
         changeCloud = this.add.text(70, 420, '- Change keyboard Scheme (' + schemes[cloud_n] + ') -', {
 	        font: '32px', fill: '#fff', fontWeight: 'bold'
