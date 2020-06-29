@@ -5,6 +5,7 @@ var gameMain = function(game){
 	chosenInstrument = 0;
 	
 	cloud_n = 0;
+	schemes = ['DEFAULT',  'W E R T Y', 'U I O P A', 'S D F G H', 'S D F G H', 'J K L Z X', 'C V B N M', '1 2 3 4 5'];
 };
 
 gameMain.prototype = {
@@ -20,18 +21,24 @@ gameMain.prototype = {
 			sprite = game.add.sprite(0, 0, keys[k]);
 			sprite.alpha = 0;
 			sprites.push(sprite);
+			sprites[k].inputEnabled = true;
+			sprites[k].events.onInputDown.add(testSounds, this, k);
 		}
 
 		offSets();
 		assignKeys();
 		loadInstruments();
 
-        this.add.text(850, 0, 'Choose Instrument:', {
-	        font: '24px', fill: '#0ff', fontWeight: 'bold', align: 'center'
+        this.add.text(850, 30, 'Choose Instrument:', {
+	        font: '32px', fill: '#0ff', fontWeight: 'bold', align: 'center'
 	    });
         
-        changeCloud = this.add.text(70, 450, 'Change keyboard Scheme: ' + cloud_n, {
-	        font: '28px', fill: '#0ff', fontWeight: 'bold'
+        useClick = this.add.text(70, 480, '* Plug in your Makeymakey with a USB 2.0 adapter\n * Instruments play pentatonic notes, tap the input images to test sounds \n * Reamp click to Q to have it play random notes', {
+	        font: '24px', fill: '#ffa'
+	    });
+        
+        changeCloud = this.add.text(70, 420, '- Change keyboard Scheme (' + schemes[cloud_n] + ') -', {
+	        font: '32px', fill: '#fff', fontWeight: 'bold'
 	    });
 		changeCloud.inputEnabled = true;
 		changeCloud.events.onInputDown.add(function(){
@@ -41,7 +48,7 @@ gameMain.prototype = {
 			else{
 				cloud_n = 0;
 			}
-			changeCloud.text = 'Change keyboard Scheme: ' + cloud_n;
+			changeCloud.text = '- Change keyboard Scheme (' + schemes[cloud_n] + ') -';
 		}, this);
 	    
 	    instruLabels = [];
@@ -51,13 +58,13 @@ gameMain.prototype = {
 			instruName = allInstruments[t].key.charAt(0).toUpperCase() + allInstruments[t].key.slice(1);
 			
 			if (t < allInstruments.length / 2){
-		        label = this.add.text(850, 50 + t * 43, instruName, {
-		            font: '36px', fill: 'white', fontWeight: 'normal', align: 'center'
+		        label = this.add.text(850, 100 + t * 60, instruName, {
+		            font: '42px', fill: 'white', fontWeight: 'normal', align: 'center'
 		        });
 			}
 			else{
-		        label = this.add.text(1000, 50 + t * 43 - allInstruments.length / 2 * 43, instruName, {
-		            font: '36px', fill: 'white', fontWeight: 'normal', align: 'center'
+		        label = this.add.text(1000, 100 + t * 60 - allInstruments.length / 2 * 60, instruName, {
+		            font: '42px', fill: 'white', fontWeight: 'normal', align: 'center'
 		        });	
 			}
 	        instruLabels.push(label);
@@ -68,13 +75,20 @@ gameMain.prototype = {
 		chooseSound(instruLabels[0]);
     },
     update: function(){  	
-    	for (n = 0; n < cloud1Array.length; n++){
+    	for (n = 0; n < allcloudArrays[cloud_n].length; n++){
 			if (allcloudArrays[cloud_n][n].isDown){
 				playSound(n);
 			}
 	    }
+	    if (QKey.isDown){
+	    	playSound(game.rnd.integerInRange(0,4));
+	    }
     }
 };
+
+function testSounds(_this, _k){
+	playSound(soundId.indexOf(_this.key));
+}
 
 function chooseSound(_this){
 	for (t = 0; t < allInstruments.length; t++){
@@ -92,8 +106,8 @@ function playSound(_n){
 		lightKey(sprites[_n]);
 		
 		try{
-			_instru.play(_n + 1, 0.4);
-		} catch(e){ _instru.play(game.rnd.integerInRange(1, 5), 0.4); }		
+			_instru.play(_n + 1, 0.5);
+		} catch(e){ _instru.play(game.rnd.integerInRange(1, 5), 0.5); }		
 		
 
 		allCloudResets[cloud_n][_n] = false;
@@ -137,6 +151,8 @@ function loadInstruments(){
 }
 
 function assignKeys(){
+	QKey = game.input.keyboard.addKey(Phaser.Keyboard.Q);	
+	
 	//wKey = game.input.keyboard.addKey(Phaser.Keyboard.W); // instead of activepointer which is used in the UI
 	
 	upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);			
@@ -211,7 +227,7 @@ function assignKeys(){
 	allcloudArrays = [cloud1Array, cloud2Array, cloud3Array, cloud4Array, cloud5Array, cloud6Array, cloud7Array];
 	allCloudResets = [cloud1resets, cloud2resets, cloud3resets, cloud4resets, cloud5resets, cloud6resets, cloud7resets];
 
-	soundId = ['up', 'down', 'right', 'left', 'space', 'w'];
+	soundId = ['up', 'down', 'right', 'left', 'space', 'click'];
 }
 
 function offSets(){	
