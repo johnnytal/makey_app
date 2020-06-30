@@ -12,7 +12,7 @@ gameMain.prototype = {
     create: function(){
     	bg = game.add.sprite(0, 0, 'bg');
     	
-    	makey = game.add.sprite(70, 20, 'makey');
+    	makey = game.add.sprite(40, 20, 'makey');
     	
 		keys = ['up', 'down', 'right', 'left', 'space', 'click'];
 		sprites = [];
@@ -33,11 +33,11 @@ gameMain.prototype = {
 	        font: '32px', fill: '#0ff', fontWeight: 'bold', align: 'center'
 	    });
         
-        useClick = this.add.text(40, 480, '* Plug in your Makeymakey with a USB 2.0 adapter\n * Instruments play pentatonic notes, tap the input images to test sounds \n * Reamp click to Q to have it play random notes', {
+        useClick = this.add.text(40, 480, '* Plug in your MakeyMakey with a USB 2.0 adapter\n * Instruments play pentatonic notes, tap the makey inputs to test sounds \n * Q plays random notes, reamp at makeymakey.com/pages/remap', {
 	        font: '24px', fill: '#ffa'
 	    });
         
-        tempoText = this.add.text(600, 50, 'TEMPO: ' + TEMPO, {
+        tempoText = this.add.text(435, 50, 'Change tempo: ' + TEMPO + ' bpm', {
 	        font: '24px', fill: '#040', fontWeight: 'bold'
 	    });
 		tempoText.inputEnabled = true;
@@ -46,10 +46,10 @@ gameMain.prototype = {
 			if (TEMPO > 280){
 				TEMPO = 40;
 			}
-			tempoText.text = 'TEMPO: ' + TEMPO;
+			tempoText.text = 'Change tempo: ' + TEMPO + ' bpm';
 		}, this);
         
-        changeCloud = this.add.text(70, 420, '- Change keyboard Scheme (' + schemes[cloud_n] + ') -', {
+        changeCloud = this.add.text(75, 420, '- Change keyboard Outputs (' + schemes[cloud_n] + ') -', {
 	        font: '32px', fill: '#fff', fontWeight: 'bold'
 	    });
 		changeCloud.inputEnabled = true;
@@ -60,7 +60,7 @@ gameMain.prototype = {
 			else{
 				cloud_n = 0;
 			}
-			changeCloud.text = '- Change keyboard Scheme (' + schemes[cloud_n] + ') -';
+			changeCloud.text = '- Change keyboard Outputs (' + schemes[cloud_n] + ') -';
 		}, this);
 	    
 	    instruLabels = [];
@@ -70,13 +70,13 @@ gameMain.prototype = {
 			instruName = allInstruments[t].key.charAt(0).toUpperCase() + allInstruments[t].key.slice(1);
 			
 			if (t < allInstruments.length / 2){
-		        label = this.add.text(850, 100 + t * 60, instruName, {
-		            font: '42px', fill: 'white', fontWeight: 'normal', align: 'center'
+		        label = this.add.text(875, 100 + t * 63, instruName, {
+		            font: '40px', fill: 'white', fontWeight: 'bold', align: 'center'
 		        });
 			}
 			else{
-		        label = this.add.text(1000, 100 + t * 60 - allInstruments.length / 2 * 60, instruName, {
-		            font: '42px', fill: 'white', fontWeight: 'normal', align: 'center'
+		        label = this.add.text(1050, 100 + t * 63 - allInstruments.length / 2 * 63, instruName, {
+		            font: '40px', fill: 'white', fontWeight: 'bold', align: 'center'
 		        });	
 			}
 	        instruLabels.push(label);
@@ -85,6 +85,15 @@ gameMain.prototype = {
         }
         
 		chooseSound(instruLabels[0]);
+		
+		setTimeout(function(){
+	        try{
+	            window.plugins.insomnia.keepAwake();
+	        } catch(e){}
+	        try{
+	           StatusBar.hide();
+	        } catch(e){}
+        }, 1000); 
     },
     update: function(){  	
     	for (n = 0; n < allcloudArrays[cloud_n].length; n++){
@@ -118,8 +127,8 @@ function playSound(_n){
 		lightKey(sprites[_n]);
 		
 		try{
-			_instru.play(_n + 1, 0.5);
-		} catch(e){ _instru.play(game.rnd.integerInRange(1, 5), 0.5); }		
+			_instru.play(_n + 1, 1);
+		} catch(e){ _instru.play(game.rnd.integerInRange(1, 5), 1); }		
 		
 
 		allCloudResets[cloud_n][_n] = false;

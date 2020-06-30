@@ -191,6 +191,7 @@ function onResume(){
     game.paused = false;
     setTimeout(function(){
         try{
+        	window.plugins.insomnia.keepAwake();
             StatusBar.hide();
         }catch(e){}   
     }, 1000);
