@@ -25,7 +25,7 @@ gameMain.prototype = {
     	
     	makey = game.add.sprite(500, 20, 'makey');
     	makey.x = game.world.centerX - makey.width / 2;
-    	makey.y = game.world.centerY - makey.height / 2 - 50;
+    	makey.y = game.world.centerY - makey.height / 2 + 150;
     	
 		keys = ['up', 'down', 'right', 'left', 'space', 'click'];
 		sprites = [];
@@ -54,9 +54,15 @@ gameMain.prototype = {
 			OUTPUTS: 0
 		};
 
-        useClick = this.add.text(40, 440, '* Plug in your MakeyMakey with a USB 2.0 adapter\n* Tap the makey inputs to test the sounds\n* "Click" does not receive an output, "Q" plays random notes\n* Reamp at makeymakey.com/pages/remap', {
+        useClick = this.add.text(40, 350, '* Buy an original MakeyMakey at makeymakey.com/products\n* Plug the MakeyMakey to your mobile devcie using an USB 2.0 adapter\n* Tap the makey inputs on the image below to test the sounds\n* "Click" does not receive an output, "Q" plays random notes\n* Reamp at makeymakey.com/pages/remap', {
 	        font: '24px', fill: '#ffa', 
 	    });
+	    useClick.x = game.world.centerX - useClick.width / 2;
+	    
+        adText = this.add.text(40, 900, 'Tap here to watch an ad, support further development and unlock more instruments', {
+	        font: '24px', fill: '#fff', 
+	    });
+	    adText.x = game.world.centerX - adText.width / 2;
 	    
 	    startGUI();
 		

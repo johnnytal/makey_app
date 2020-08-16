@@ -5,8 +5,8 @@ document.addEventListener("resume", onResume, false);
 //window.onload = start;
 
 function start(){ 
-    WIDTH = 1400; 
-    HEIGHT = 600; 
+    WIDTH = 850; 
+    HEIGHT = 1100; 
 
     FACTOR = 5;
     
@@ -30,20 +30,14 @@ boot.prototype = {
     create: function(){
         game.stage.backgroundColor = '#053340';
 
-        if (this.game.device.desktop){
-	        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-	
-	        this.scale.maxWidth = w;
-	        this.scale.maxHeight = h;   
-        } 
-        
-        else {
+        if (!this.game.device.desktop){
+        	
             this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 
             this.scale.maxWidth = w;
             this.scale.maxHeight = h;
             
-            this.scale.forceOrientation(false, true);
+            this.scale.forceOrientation(true, false);
         }
 
 
