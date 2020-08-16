@@ -30,16 +30,10 @@ boot.prototype = {
     create: function(){
         game.stage.backgroundColor = '#053340';
 
-        if (!this.game.device.desktop){
-        	
-            this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-
-            this.scale.maxWidth = w;
-            this.scale.maxHeight = h;
-            
-            this.scale.forceOrientation(true, false);
-        }
-
+        this.scale.maxWidth = w;
+        this.scale.maxHeight = h;
+        
+        this.scale.forceOrientation(true, false);
 
         game.state.start('Preloader');
     }

@@ -1,12 +1,13 @@
 var gameMain = function(game){
-	allInstruments = [];	
+	allInstruments = [];
+	gui = null;	
 
 	config = {};
-		
 	cloud_n = 0;
-
 	note_n = 0;
 	
+	notWatched = true;
+
 	schemes = ['DEFAULT',  'W E R T Y', 'U I O P A', 'S D F G H', 'S D F G H', 'J K L Z X', 'C V B N M', '1 2 3 4 5'];
 	
 	songs = {
@@ -23,9 +24,28 @@ gameMain.prototype = {
     create: function(){
     	bg = game.add.sprite(0, 0, 'bg');
     	
-    	makey = game.add.sprite(500, 20, 'makey');
+    	makey = game.add.sprite(0, 0, 'makey');
     	makey.x = game.world.centerX - makey.width / 2;
-    	makey.y = game.world.centerY - makey.height / 2 + 150;
+    	makey.y = game.world.centerY - makey.height / 2 + 180;
+    	
+    	optionsBtn = game.add.sprite(50, 930, 'options');
+    	optionsBtn.scale.set(.5, .5);
+		optionsBtn.inputEnabled = true;
+		optionsBtn.events.onInputDown.add(function(){
+			if (optionsBtn.tint == 0xffffff){
+				optionsBtn.tint = 0xf557a2;
+				gui.close();
+			}
+			else{
+				optionsBtn.tint = 0xffffff;
+				gui.open();
+			}
+		}, this);
+    	
+    	chestBtn = game.add.sprite(250, 930, 'chest');
+    	chestBtn.scale.set(.5, .5);
+		chestBtn.inputEnabled = true;
+		chestBtn.events.onInputDown.add(watchAd, this);
     	
 		keys = ['up', 'down', 'right', 'left', 'space', 'click'];
 		sprites = [];
@@ -53,17 +73,32 @@ gameMain.prototype = {
 			METRONOME: 120,
 			OUTPUTS: 0
 		};
+		    	
+    	rTxt = this.add.text(makey.x + 325, makey.y + 150, notes[config.RIGHT], {
+	        font: '24px', fill: '#000000', 
+	    });
+    	lTxt = this.add.text(makey.x + 33, makey.y + 150, notes[config.LEFT], {
+	        font: '24px', fill: '#000000', 
+	    });
+    	uTxt = this.add.text(makey.x + 118, makey.y + 50, notes[config.UP], {
+	        font: '24px', fill: '#000000', 
+	    });
+    	dTxt = this.add.text(makey.x + 118, makey.y + 240, notes[config.DOWN], {
+	        font: '24px', fill: '#000000', 
+	    });
+    	sTxt = this.add.text(makey.x + 432, makey.y + 50, notes[config.SPACE], {
+	        font: '24px', fill: '#000000', 
+	    });
 
-        useClick = this.add.text(40, 350, '* Buy an original MakeyMakey at makeymakey.com/products\n* Plug the MakeyMakey to your mobile devcie using an USB 2.0 adapter\n* Tap the makey inputs on the image below to test the sounds\n* "Click" does not receive an output, "Q" plays random notes\n* Reamp at makeymakey.com/pages/remap', {
+        useClick = this.add.text(40, 420, '* Plug your MakeyMakey to a mobile devcie using an USB 2.0 adapter\n* Tap the makey inputs on the image below to test the sounds\n* "Click" does not receive an output, "Q" plays random notes\n* Reamp at makeymakey.com/pages/remap', {
 	        font: '24px', fill: '#ffa', 
 	    });
 	    useClick.x = game.world.centerX - useClick.width / 2;
 	    
-        adText = this.add.text(40, 900, 'Tap here to watch an ad, support further development and unlock more instruments', {
-	        font: '24px', fill: '#fff', 
+        adText = this.add.text(chestBtn.x + 145, chestBtn.y + 12, 'Watch ad =\nallows to change to any note +\nsupport further development!', {
+	        font: '23px', fill: '#fff', 
 	    });
-	    adText.x = game.world.centerX - adText.width / 2;
-	    
+
 	    startGUI();
 		
 		setTimeout(function(){
@@ -92,36 +127,18 @@ function startGUI(){
   
     gui.add(config, 'INSTRUMENT', 
     { "Vibes": 0, "Harp": 1, "Pan Flute" : 2, "Xylophone": 3, "Glock": 4, "Metal Percussions": 5, "Log": 6,
-    "Pizzicato": 7, "Kalimba": 8, "Oud": 9, "Drums": 10, "Bass Guitar": 11, "Tuba": 12  }).name('Instrument');
+    "Pizzicato": 7, "Kalimba": 8, "Oud": 9, "Drums": 10, "Bass Guitar": 11, "Tuba": 12  }).name('Instrument') ;
 
     gui.add(config, 'SONG', 
     { 'None': 'None', 'Twinkle': 'Twinkle', 'macdonald': 'macdonald', 'Susanna': 'Susanna'}).name('Song');
-
-    gui.add(config, 'UP', 
-    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('UP note');
-     
-    gui.add(config, 'DOWN', 
-    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('DOWN note');
-     
-    gui.add(config, 'RIGHT', 
-    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('RIGHT note');
-    
-    gui.add(config, 'LEFT', 
-    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('LEFT note');    
-    
-    gui.add(config, 'SPACE', 
-    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('SPACE note');
 
     gui.add(config, 'OUTPUTS', 
     { 'DEFAULT': 0, 'W E R T Y': 1, 'U I O P A': 2, 'S D F G H': 3, 'J K L Z X': 4, 'C V B N M': 5, '1 2 3 4 5': 6}).name('Outputs');
     
     gui.add(config, 'METRONOME', 60, 360).name('Metronome BPM').step(5);
-
+    
     btn = document.getElementsByClassName('close-button')[0].style.visibility = 'hidden';
-    document.getElementsByClassName('dg')[0].style.marginTop = '20px';
     document.getElementsByClassName('dg')[1].style.cssFloat = 'left';
-	
-    //gui.close();
 }
 
 function testSounds(_this, _k){
@@ -134,21 +151,23 @@ function playSound(_n){
 		
 		lightKey(sprites[_n]);
 		
-		if (config.SONG == 'None'){
-			if (allInstruments[config.INSTRUMENT] != metals && allInstruments[config.INSTRUMENT] != drums){
-				_instru.play(parseInt(config[Object.keys(config)[_n + 2]]) + 1, 1); // _n + 2 is the index of the pressed key in the config object
+		if (allInstruments.indexOf(allInstruments[config.INSTRUMENT]) > -1){
+			if (config.SONG == 'None'){
+				if (allInstruments[config.INSTRUMENT] != metals && allInstruments[config.INSTRUMENT] != drums){
+					_instru.play(parseInt(config[Object.keys(config)[_n + 2]]) + 1, 1); // _n + 2 is the index of the pressed key in the config object
+				}
+				else{
+					_instru.play(_n + 1);
+				}
 			}
 			else{
-				_instru.play(_n + 1);
-			}
-		}
-		else{
-			if (note_n < songs[config.SONG].length){
-				_instru.play(songs[config.SONG][note_n] + 1, 1);
-				note_n++;
-			}
-			else{
-				note_n = 0;
+				if (note_n < songs[config.SONG].length){
+					_instru.play(songs[config.SONG][note_n] + 1, 1);
+					note_n++;
+				}
+				else{
+					note_n = 0;
+				}
 			}
 		}
 
@@ -189,7 +208,7 @@ function loadInstruments(){
 	log = game.add.audioSprite('log');
 	kalimba = game.add.audioSprite('kalimba');
 
-    allInstruments = [vibes, harp, pan, xylo, glock, metals, log, pizz, kalimba, oud, drums, bass, tuba];   
+    allInstruments = [vibes, harp, pan, xylo, glock, metals, log, pizz, kalimba];   
 }
 
 function assignKeys(){
@@ -270,6 +289,45 @@ function assignKeys(){
 	allCloudResets = [cloud1resets, cloud2resets, cloud3resets, cloud4resets, cloud5resets, cloud6resets, cloud7resets];
 
 	soundId = ['up', 'down', 'right', 'left', 'space', 'click'];
+}
+
+function watchAd(){
+	if (notWatched){
+	    gui.add(config, 'UP', 
+	    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('UP note').onFinishChange(updateText);
+	     
+	    gui.add(config, 'DOWN', 
+	    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('DOWN note').onFinishChange(updateText);
+	     
+	    gui.add(config, 'RIGHT', 
+	    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('RIGHT note').onFinishChange(updateText);
+	    
+	    gui.add(config, 'LEFT', 
+	    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('LEFT note').onFinishChange(updateText);    
+	    
+	    gui.add(config, 'SPACE', 
+	    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('SPACE note').onFinishChange(updateText);
+		
+		notWatched = false;
+	}
+}
+
+function updateText(){
+	rTxt.text = notes[config.RIGHT];
+	lTxt.text = notes[config.LEFT];
+	uTxt.text = notes[config.UP];
+	dTxt.text = notes[config.DOWN];
+	sTxt.text = notes[config.SPACE];
+}
+
+function updateDropdown(target, list){   
+    innerHTMLStr = "";
+    for(var i=0; i<list.length; i++){
+        var str = "<option value='" + list[i] + "'>" + list[i] + "</option>";
+        innerHTMLStr += str;        
+    }
+
+    if (innerHTMLStr != "") target.domElement.children[0].innerHTML = innerHTMLStr;
 }
 
 function offSets(){	
