@@ -1,18 +1,31 @@
 var gameMain = function(game){
-	TEMPO = 120;
 	allInstruments = [];	
-	
-	chosenInstrument = 0;
-	
+
+	config = {};
+		
 	cloud_n = 0;
+
+	note_n = 0;
+	
 	schemes = ['DEFAULT',  'W E R T Y', 'U I O P A', 'S D F G H', 'S D F G H', 'J K L Z X', 'C V B N M', '1 2 3 4 5'];
+	
+	songs = {
+		'Default': 'None',
+		'Twinkle': [0, 0, 7, 7, 9, 9, 7, 5, 5, 4, 4, 2, 2, 0],
+		'macdonald': [7, 7, 7, 2, 4, 4, 2, 11, 11, 9, 9, 7],
+		'Susanna': [0, 2, 4, 7, 7, 9, 7, 4, 0, 2, 4, 4, 2, 0, 2, 0, 2, 4, 7, 7, 9, 7, 4, 0, 2, 4, 4, 2, 2, 0]
+	};
+	
+	notes = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 };
 
 gameMain.prototype = {
     create: function(){
     	bg = game.add.sprite(0, 0, 'bg');
     	
-    	makey = game.add.sprite(40, 20, 'makey');
+    	makey = game.add.sprite(500, 20, 'makey');
+    	makey.x = game.world.centerX - makey.width / 2;
+    	makey.y = game.world.centerY - makey.height / 2 - 50;
     	
 		keys = ['up', 'down', 'right', 'left', 'space', 'click'];
 		sprites = [];
@@ -25,66 +38,27 @@ gameMain.prototype = {
 			sprites[k].events.onInputDown.add(testSounds, this, k);
 		}
 
+		loadInstruments();
 		offSets();
 		assignKeys();
-		loadInstruments();
 
-        this.add.text(850, 30, 'Choose Instrument:', {
-	        font: '32px', fill: '#0ff', fontWeight: 'bold', align: 'center'
+		config = {
+			INSTRUMENT: 0,
+			SONG: 'None',
+			UP: 0,
+			DOWN: 2,
+			RIGHT: 4,
+			LEFT: 7,
+			SPACE: 9,
+			METRONOME: 120,
+			OUTPUTS: 0
+		};
+
+        useClick = this.add.text(40, 440, '* Plug in your MakeyMakey with a USB 2.0 adapter\n* Tap the makey inputs to test the sounds\n* "Click" does not receive an output, "Q" plays random notes\n* Reamp at makeymakey.com/pages/remap', {
+	        font: '24px', fill: '#ffa', 
 	    });
-        
-        useClick = this.add.text(40, 480, '* Plug in your MakeyMakey with a USB 2.0 adapter\n * Instruments play pentatonic notes, tap the makey inputs to test sounds \n * Q plays random notes, reamp at makeymakey.com/pages/remap', {
-	        font: '24px', fill: '#ffa'
-	    });
-        
-        tempoText = this.add.text(435, 50, 'Change tempo: ' + TEMPO + ' bpm', {
-	        font: '24px', fill: '#040', fontWeight: 'bold'
-	    });
-		tempoText.inputEnabled = true;
-		tempoText.events.onInputDown.add(function(){
-			TEMPO += 40;
-			if (TEMPO > 280){
-				TEMPO = 40;
-			}
-			tempoText.text = 'Change tempo: ' + TEMPO + ' bpm';
-		}, this);
-        
-        changeCloud = this.add.text(75, 420, '- Change keyboard Outputs (' + schemes[cloud_n] + ') -', {
-	        font: '32px', fill: '#fff', fontWeight: 'bold'
-	    });
-		changeCloud.inputEnabled = true;
-		changeCloud.events.onInputDown.add(function(){
-			if (cloud_n < 6){
-				cloud_n++;
-			}
-			else{
-				cloud_n = 0;
-			}
-			changeCloud.text = '- Change keyboard Outputs (' + schemes[cloud_n] + ') -';
-		}, this);
 	    
-	    instruLabels = [];
-	    
-		for (t = 0; t < allInstruments.length; t++){
-			
-			instruName = allInstruments[t].key.charAt(0).toUpperCase() + allInstruments[t].key.slice(1);
-			
-			if (t < allInstruments.length / 2){
-		        label = this.add.text(875, 100 + t * 63, instruName, {
-		            font: '40px', fill: 'white', fontWeight: 'bold', align: 'center'
-		        });
-			}
-			else{
-		        label = this.add.text(1050, 100 + t * 63 - allInstruments.length / 2 * 63, instruName, {
-		            font: '40px', fill: 'white', fontWeight: 'bold', align: 'center'
-		        });	
-			}
-	        instruLabels.push(label);
-			instruLabels[t].inputEnabled = true;
-			instruLabels[t].events.onInputDown.add(chooseSound, this);
-        }
-        
-		chooseSound(instruLabels[0]);
+	    startGUI();
 		
 		setTimeout(function(){
 	        try{
@@ -95,9 +69,9 @@ gameMain.prototype = {
 	        } catch(e){}
         }, 1000); 
     },
-    update: function(){  	
-    	for (n = 0; n < allcloudArrays[cloud_n].length; n++){
-			if (allcloudArrays[cloud_n][n].isDown){
+    update: function(){ 
+    	for (n = 0; n < allcloudArrays[config.OUTPUTS].length; n++){
+			if (allcloudArrays[config.OUTPUTS][n].isDown){
 				playSound(n);
 			}
 	    }
@@ -107,50 +81,91 @@ gameMain.prototype = {
     }
 };
 
+function startGUI(){
+    gui = new dat.GUI({ width: 300 });
+  
+    gui.add(config, 'INSTRUMENT', 
+    { "Vibes": 0, "Harp": 1, "Pan Flute" : 2, "Xylophone": 3, "Glock": 4, "Metal Percussions": 5, "Log": 6,
+    "Pizzicato": 7, "Kalimba": 8, "Oud": 9, "Drums": 10, "Bass Guitar": 11, "Tuba": 12  }).name('Instrument');
+
+    gui.add(config, 'SONG', 
+    { 'None': 'None', 'Twinkle': 'Twinkle', 'macdonald': 'macdonald', 'Susanna': 'Susanna'}).name('Song');
+
+    gui.add(config, 'UP', 
+    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('UP note');
+     
+    gui.add(config, 'DOWN', 
+    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('DOWN note');
+     
+    gui.add(config, 'RIGHT', 
+    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('RIGHT note');
+    
+    gui.add(config, 'LEFT', 
+    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('LEFT note');    
+    
+    gui.add(config, 'SPACE', 
+    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('SPACE note');
+
+    gui.add(config, 'OUTPUTS', 
+    { 'DEFAULT': 0, 'W E R T Y': 1, 'U I O P A': 2, 'S D F G H': 3, 'J K L Z X': 4, 'C V B N M': 5, '1 2 3 4 5': 6}).name('Outputs');
+    
+    gui.add(config, 'METRONOME', 60, 360).name('Metronome BPM').step(5);
+
+    btn = document.getElementsByClassName('close-button')[0].style.visibility = 'hidden';
+    document.getElementsByClassName('dg')[0].style.marginTop = '20px';
+    document.getElementsByClassName('dg')[1].style.cssFloat = 'left';
+	
+    //gui.close();
+}
+
 function testSounds(_this, _k){
 	playSound(soundId.indexOf(_this.key));
 }
 
-function chooseSound(_this){
-	for (t = 0; t < allInstruments.length; t++){
-		instruLabels[t].fill = '#fff';
-    }
-    _this.fill = 'yellow';
-    
-    chosenInstrument = instruLabels.indexOf(_this);
-}
-
 function playSound(_n){
-	if (allCloudResets[cloud_n][_n]){
-		_instru = allInstruments[chosenInstrument];
+	if (allCloudResets[config.OUTPUTS][_n]){
+		_instru = allInstruments[config.INSTRUMENT];
 		
 		lightKey(sprites[_n]);
 		
-		try{
-			_instru.play(_n + 1, 1);
-		} catch(e){ _instru.play(game.rnd.integerInRange(1, 5), 1); }		
-		
+		if (config.SONG == 'None'){
+			if (allInstruments[config.INSTRUMENT] != metals && allInstruments[config.INSTRUMENT] != drums){
+				_instru.play(parseInt(config[Object.keys(config)[_n + 2]]) + 1, 1); // _n + 2 is the index of the pressed key in the config object
+			}
+			else{
+				_instru.play(_n + 1);
+			}
+		}
+		else{
+			if (note_n < songs[config.SONG].length){
+				_instru.play(songs[config.SONG][note_n] + 1, 1);
+				note_n++;
+			}
+			else{
+				note_n = 0;
+			}
+		}
 
-		allCloudResets[cloud_n][_n] = false;
+		allCloudResets[config.OUTPUTS][_n] = false;
 		
 		setTimeout(function(){
-			allCloudResets[cloud_n][_n] = true;
-		}, 60000 / TEMPO);
+			allCloudResets[config.OUTPUTS][_n] = true;
+		}, 60000 / config.METRONOME);
 	}
 }
 
 function lightKey(_this){
-	game.add.tween(_this).to( { alpha: 1 }, 300 - TEMPO, "Linear", true);
+	game.add.tween(_this).to( { alpha: 1 }, 300 - config.METRONOME, "Linear", true);
 	
 	setTimeout(function(){
-		game.add.tween(_this).to( { alpha: 0 }, 300 - TEMPO, "Linear", true);
-	}, 60000 / TEMPO);
+		game.add.tween(_this).to( { alpha: 0 }, 300 - config.METRONOME, "Linear", true);
+	}, 60000 / config.METRONOME);
 	
-	game.add.tween(makey).to( { alpha: 0.7 }, 300 - TEMPO, "Linear", true);
+	game.add.tween(makey).to( { alpha: 0.7 }, 300 - config.METRONOME, "Linear", true);
 	
 	setTimeout(function(){
-		game.add.tween(makey).to( { alpha: 1 }, 300 - TEMPO, "Linear", true);
-	}, 60000 / TEMPO);
+		game.add.tween(makey).to( { alpha: 1 }, 300 - config.METRONOME, "Linear", true);
+	}, 60000 / config.METRONOME);
 }
 
 function loadInstruments(){
@@ -191,8 +206,8 @@ function assignKeys(){
 	rKey = game.input.keyboard.addKey(Phaser.Keyboard.R);
 	tKey = game.input.keyboard.addKey(Phaser.Keyboard.T);
 	yKey = game.input.keyboard.addKey(Phaser.Keyboard.Y);
-	
-	cloud2Array = [wKey, eKey, rKey, tKey, yKey]; // C D E G A
+	 
+	cloud2Array = [wKey, eKey, rKey, tKey, yKey];
 	cloud2resets = [true, true, true, true, true];
 	
 	// CLOUD 3 -  U I O P A
@@ -202,7 +217,7 @@ function assignKeys(){
 	pKey = game.input.keyboard.addKey(Phaser.Keyboard.P);
 	aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
 	
-	cloud3Array = [uKey, iKey, oKey, pKey, aKey]; // C D E G A
+	cloud3Array = [uKey, iKey, oKey, pKey, aKey];
 	cloud3resets = [true, true, true, true, true];
 	
 	// CLOUD 4 - S D F G H
@@ -212,7 +227,7 @@ function assignKeys(){
 	gKey = game.input.keyboard.addKey(Phaser.Keyboard.G);
 	hKey = game.input.keyboard.addKey(Phaser.Keyboard.H);
 	
-	cloud4Array = [sKey, dKey, fKey, gKey, hKey]; // C D E G A
+	cloud4Array = [sKey, dKey, fKey, gKey, hKey];
 	cloud4resets = [true, true, true, true, true];
 	
 	// CLOUD 5 - J K L Z X
@@ -222,7 +237,7 @@ function assignKeys(){
 	zKey = game.input.keyboard.addKey(Phaser.Keyboard.Z);
 	xKey = game.input.keyboard.addKey(Phaser.Keyboard.X);
 	
-	cloud5Array = [jKey, kKey, lKey, zKey, xKey]; // C D E G A
+	cloud5Array = [jKey, kKey, lKey, zKey, xKey];
 	cloud5resets = [true, true, true, true, true];
 	
 	// CLOUD 6 - C V B N M
@@ -232,7 +247,7 @@ function assignKeys(){
 	nKey = game.input.keyboard.addKey(Phaser.Keyboard.N);
 	mKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
 	
-	cloud6Array = [cKey, vKey, bKey, nKey, mKey]; // C D E G A
+	cloud6Array = [cKey, vKey, bKey, nKey, mKey];
 	cloud6resets = [true, true, true, true, true];
 	
 	// CLOUD 7 - 1 2 3 4 5
@@ -242,7 +257,7 @@ function assignKeys(){
 	_Key4 = game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
 	_Key5 = game.input.keyboard.addKey(Phaser.Keyboard.FIVE);
 	
-	cloud7Array = [_Key1, _Key2, _Key3, _Key4, _Key5]; // C D E G A
+	cloud7Array = [_Key1, _Key2, _Key3, _Key4, _Key5];
 	cloud7resets = [true, true, true, true, true];
 	
 	allcloudArrays = [cloud1Array, cloud2Array, cloud3Array, cloud4Array, cloud5Array, cloud6Array, cloud7Array];

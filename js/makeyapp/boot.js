@@ -2,7 +2,7 @@ document.addEventListener("deviceready", start, false);
 document.addEventListener("pause", onPause, false);
 document.addEventListener("resume", onResume, false);
 
-//window.onload = start;
+window.onload = start;
 
 function start(){ 
     WIDTH = 1400; 
@@ -60,6 +60,14 @@ function loadJson(){
 	        3 : { start: FACTOR*2, end: FACTOR*3, loop: false },
 	        4 : { start: FACTOR*3, end: FACTOR*4, loop: false },
 	        5 : { start: FACTOR*4, end: FACTOR*5, loop: false },
+	        6 : { start: FACTOR*5, end: FACTOR*6, loop: false },
+	        7 : { start: FACTOR*6, end: FACTOR*7, loop: false },
+	        8 : { start: FACTOR*7, end: FACTOR*8, loop: false },
+	        9 : { start: FACTOR*8, end: FACTOR*9, loop: false },
+	        10 : { start: FACTOR*9, end: FACTOR*10, loop: false },
+	        11 : { start: FACTOR*10, end: FACTOR*11, loop: false },
+	        12 : { start: FACTOR*11, end: FACTOR*12, loop: false },
+	        13 : { start: FACTOR*12, end: FACTOR*13, loop: false }
         }
 	};
 	
@@ -70,6 +78,14 @@ function loadJson(){
 	        3 : { start: FACTOR*2, end: FACTOR*3, loop: false },
 	        4 : { start: FACTOR*3, end: FACTOR*4, loop: false },
 	        5 : { start: FACTOR*4, end: FACTOR*5, loop: false },
+	        6 : { start: FACTOR*5, end: FACTOR*6, loop: false },
+	        7 : { start: FACTOR*6, end: FACTOR*7, loop: false },
+	        8 : { start: FACTOR*7, end: FACTOR*8, loop: false },
+	        9 : { start: FACTOR*8, end: FACTOR*9, loop: false },
+	        10 : { start: FACTOR*9, end: FACTOR*10, loop: false },
+	        11 : { start: FACTOR*10, end: FACTOR*11, loop: false },
+	        12 : { start: FACTOR*11, end: FACTOR*12, loop: false },
+	        13 : { start: FACTOR*12, end: FACTOR*13, loop: false }
         }
 	};
 	
@@ -80,6 +96,14 @@ function loadJson(){
 	        3 : { start: FACTOR*2, end: FACTOR*3, loop: false },
 	        4 : { start: FACTOR*3, end: FACTOR*4, loop: false },
 	        5 : { start: FACTOR*4, end: FACTOR*5, loop: false },
+	        6 : { start: FACTOR*5, end: FACTOR*6, loop: false },
+	        7 : { start: FACTOR*6, end: FACTOR*7, loop: false },
+	        8 : { start: FACTOR*7, end: FACTOR*8, loop: false },
+	        9 : { start: FACTOR*8, end: FACTOR*9, loop: false },
+	        10 : { start: FACTOR*9, end: FACTOR*10, loop: false },
+	        11 : { start: FACTOR*10, end: FACTOR*11, loop: false },
+	        12 : { start: FACTOR*11, end: FACTOR*12, loop: false },
+	        13 : { start: FACTOR*12, end: FACTOR*13, loop: false }
         }
 	};
 	
@@ -90,6 +114,14 @@ function loadJson(){
 	        3 : { start: FACTOR*2, end: FACTOR*3, loop: false },
 	        4 : { start: FACTOR*3, end: FACTOR*4, loop: false },
 	        5 : { start: FACTOR*4, end: FACTOR*5, loop: false },
+	        6 : { start: FACTOR*5, end: FACTOR*6, loop: false },
+	        7 : { start: FACTOR*6, end: FACTOR*7, loop: false },
+	        8 : { start: FACTOR*7, end: FACTOR*8, loop: false },
+	        9 : { start: FACTOR*8, end: FACTOR*9, loop: false },
+	        10 : { start: FACTOR*9, end: FACTOR*10, loop: false },
+	        11 : { start: FACTOR*10, end: FACTOR*11, loop: false },
+	        12 : { start: FACTOR*11, end: FACTOR*12, loop: false },
+	        13 : { start: FACTOR*12, end: FACTOR*13, loop: false }
         }
 	};
 	
@@ -100,6 +132,14 @@ function loadJson(){
 	        3 : { start: FACTOR*2, end: FACTOR*3, loop: false },
 	        4 : { start: FACTOR*3, end: FACTOR*4, loop: false },
 	        5 : { start: FACTOR*4, end: FACTOR*5, loop: false },
+	        6 : { start: FACTOR*5, end: FACTOR*6, loop: false },
+	        7 : { start: FACTOR*6, end: FACTOR*7, loop: false },
+	        8 : { start: FACTOR*7, end: FACTOR*8, loop: false },
+	        9 : { start: FACTOR*8, end: FACTOR*9, loop: false },
+	        10 : { start: FACTOR*9, end: FACTOR*10, loop: false },
+	        11 : { start: FACTOR*10, end: FACTOR*11, loop: false },
+	        12 : { start: FACTOR*11, end: FACTOR*12, loop: false },
+	        13 : { start: FACTOR*12, end: FACTOR*13, loop: false }
         }
 	};
 	
@@ -109,7 +149,7 @@ function loadJson(){
 	        2 : { start: FACTOR, end: FACTOR*2, loop: false },
 	        3 : { start: FACTOR*2, end: FACTOR*3, loop: false },
 	        4 : { start: FACTOR*3, end: FACTOR*4, loop: false },
-	        5 : { start: FACTOR*4, end: FACTOR*5, loop: false },
+	        5 : { start: FACTOR*4, end: FACTOR*5, loop: false }
         }
 	};
 	
@@ -120,6 +160,14 @@ function loadJson(){
 	        3 : { start: FACTOR*2, end: FACTOR*3, loop: false },
 	        4 : { start: FACTOR*3, end: FACTOR*4, loop: false },
 	        5 : { start: FACTOR*4, end: FACTOR*5, loop: false },
+	        6 : { start: FACTOR*5, end: FACTOR*6, loop: false },
+	        7 : { start: FACTOR*6, end: FACTOR*7, loop: false },
+	        8 : { start: FACTOR*7, end: FACTOR*8, loop: false },
+	        9 : { start: FACTOR*8, end: FACTOR*9, loop: false },
+	        10 : { start: FACTOR*9, end: FACTOR*10, loop: false },
+	        11 : { start: FACTOR*10, end: FACTOR*11, loop: false },
+	        12 : { start: FACTOR*11, end: FACTOR*12, loop: false },
+	        13 : { start: FACTOR*12, end: FACTOR*13, loop: false }
         }
 	};
 	
@@ -130,6 +178,14 @@ function loadJson(){
 	        3 : { start: FACTOR*2, end: FACTOR*3, loop: false },
 	        4 : { start: FACTOR*3, end: FACTOR*4, loop: false },
 	        5 : { start: FACTOR*4, end: FACTOR*5, loop: false },
+	        6 : { start: FACTOR*5, end: FACTOR*6, loop: false },
+	        7 : { start: FACTOR*6, end: FACTOR*7, loop: false },
+	        8 : { start: FACTOR*7, end: FACTOR*8, loop: false },
+	        9 : { start: FACTOR*8, end: FACTOR*9, loop: false },
+	        10 : { start: FACTOR*9, end: FACTOR*10, loop: false },
+	        11 : { start: FACTOR*10, end: FACTOR*11, loop: false },
+	        12 : { start: FACTOR*11, end: FACTOR*12, loop: false },
+	        13 : { start: FACTOR*12, end: FACTOR*13, loop: false }
         }
 	};
 	audioKalimba = {
@@ -139,6 +195,14 @@ function loadJson(){
 	        3 : { start: FACTOR*2, end: FACTOR*3, loop: false },
 	        4 : { start: FACTOR*3, end: FACTOR*4, loop: false },
 	        5 : { start: FACTOR*4, end: FACTOR*5, loop: false },
+	        6 : { start: FACTOR*5, end: FACTOR*6, loop: false },
+	        7 : { start: FACTOR*6, end: FACTOR*7, loop: false },
+	        8 : { start: FACTOR*7, end: FACTOR*8, loop: false },
+	        9 : { start: FACTOR*8, end: FACTOR*9, loop: false },
+	        10 : { start: FACTOR*9, end: FACTOR*10, loop: false },
+	        11 : { start: FACTOR*10, end: FACTOR*11, loop: false },
+	        12 : { start: FACTOR*11, end: FACTOR*12, loop: false },
+	        13 : { start: FACTOR*12, end: FACTOR*13, loop: false }
         }
 	};
 	
@@ -149,6 +213,14 @@ function loadJson(){
 	        3 : { start: FACTOR*2, end: FACTOR*3, loop: false },
 	        4 : { start: FACTOR*3, end: FACTOR*4, loop: false },
 	        5 : { start: FACTOR*4, end: FACTOR*5, loop: false },
+	        6 : { start: FACTOR*5, end: FACTOR*6, loop: false },
+	        7 : { start: FACTOR*6, end: FACTOR*7, loop: false },
+	        8 : { start: FACTOR*7, end: FACTOR*8, loop: false },
+	        9 : { start: FACTOR*8, end: FACTOR*9, loop: false },
+	        10 : { start: FACTOR*9, end: FACTOR*10, loop: false },
+	        11 : { start: FACTOR*10, end: FACTOR*11, loop: false },
+	        12 : { start: FACTOR*11, end: FACTOR*12, loop: false },
+	        13 : { start: FACTOR*12, end: FACTOR*13, loop: false }
         }
 	};
 	
@@ -158,7 +230,7 @@ function loadJson(){
 	        2 : { start: FACTOR, end: FACTOR*2, loop: false },
 	        3 : { start: FACTOR*2, end: FACTOR*3, loop: false },
 	        4 : { start: FACTOR*3, end: FACTOR*4, loop: false },
-	        5 : { start: FACTOR*4, end: FACTOR*5, loop: false },
+	        5 : { start: FACTOR*4, end: FACTOR*5, loop: false }
         }
 	};
 	
@@ -169,6 +241,14 @@ function loadJson(){
 	        3 : { start: FACTOR*2, end: FACTOR*3, loop: false },
 	        4 : { start: FACTOR*3, end: FACTOR*4, loop: false },
 	        5 : { start: FACTOR*4, end: FACTOR*5, loop: false },
+	        6 : { start: FACTOR*5, end: FACTOR*6, loop: false },
+	        7 : { start: FACTOR*6, end: FACTOR*7, loop: false },
+	        8 : { start: FACTOR*7, end: FACTOR*8, loop: false },
+	        9 : { start: FACTOR*8, end: FACTOR*9, loop: false },
+	        10 : { start: FACTOR*9, end: FACTOR*10, loop: false },
+	        11 : { start: FACTOR*10, end: FACTOR*11, loop: false },
+	        12 : { start: FACTOR*11, end: FACTOR*12, loop: false },
+	        13 : { start: FACTOR*12, end: FACTOR*13, loop: false }
         }
 	};
 	
@@ -179,6 +259,14 @@ function loadJson(){
 	        3 : { start: FACTOR*2, end: FACTOR*3, loop: false },
 	        4 : { start: FACTOR*3, end: FACTOR*4, loop: false },
 	        5 : { start: FACTOR*4, end: FACTOR*5, loop: false },
+	        6 : { start: FACTOR*5, end: FACTOR*6, loop: false },
+	        7 : { start: FACTOR*6, end: FACTOR*7, loop: false },
+	        8 : { start: FACTOR*7, end: FACTOR*8, loop: false },
+	        9 : { start: FACTOR*8, end: FACTOR*9, loop: false },
+	        10 : { start: FACTOR*9, end: FACTOR*10, loop: false },
+	        11 : { start: FACTOR*10, end: FACTOR*11, loop: false },
+	        12 : { start: FACTOR*11, end: FACTOR*12, loop: false },
+	        13 : { start: FACTOR*12, end: FACTOR*13, loop: false }
         }
 	};
 }
