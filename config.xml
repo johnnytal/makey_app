@@ -35,10 +35,10 @@
 		<plugin name="cordova-plugin-insomnia" spec="*"/>
 		<plugin name="cordova-plugin-statusbar" spec="*"/>
 		
-		<!--<plugin name="cordova-plugin-admobpro" source="npm">
-			<variable name="ADMOB_APP_ID" value="ca-app-pub-9795366520625065~1393669432" />
+		<plugin name="cordova-plugin-admobpro" source="npm">
+			<variable name="ADMOB_APP_ID" value="ca-app-pub-9795366520625065~2171058181" />
 			<variable name="PLAY_SERVICES_VERSION" value="16.0.0" />
-		</plugin>-->
+		</plugin>
 
 		<icon src="512x512.png"/>
 	</widget>

@@ -20,9 +20,6 @@ preloader.prototype = {
         game.load.image('right', 'assets/makey/images/right.png');
         game.load.image('left', 'assets/makey/images/left.png');
         game.load.image('bg', 'assets/makey/images/bg.jpg');
-        game.load.image('blank', 'assets/makey/images/blank.png');
-        game.load.image('chest', 'assets/makey/images/49.png');
-        game.load.image('options', 'assets/makey/images/39.png');
 
         game.load.audiosprite('vibes', 'assets/makey/audio/vibes.mp3', null, audioVibes);
         game.load.audiosprite('harp', 'assets/makey/audio/harp.mp3', null, audioHarp);

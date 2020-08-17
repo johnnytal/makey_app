@@ -26,27 +26,8 @@ gameMain.prototype = {
     	
     	makey = game.add.sprite(0, 0, 'makey');
     	makey.x = game.world.centerX - makey.width / 2;
-    	makey.y = game.world.centerY - makey.height / 2 + 180;
-    	
-    	optionsBtn = game.add.sprite(50, 930, 'options');
-    	optionsBtn.scale.set(.5, .5);
-		optionsBtn.inputEnabled = true;
-		optionsBtn.events.onInputDown.add(function(){
-			if (optionsBtn.tint == 0xffffff){
-				optionsBtn.tint = 0xf557a2;
-				gui.close();
-			}
-			else{
-				optionsBtn.tint = 0xffffff;
-				gui.open();
-			}
-		}, this);
-    	
-    	chestBtn = game.add.sprite(250, 930, 'chest');
-    	chestBtn.scale.set(.5, .5);
-		chestBtn.inputEnabled = true;
-		chestBtn.events.onInputDown.add(watchAd, this);
-    	
+    	makey.y = game.world.centerY - makey.height / 2 + 110;
+
 		keys = ['up', 'down', 'right', 'left', 'space', 'click'];
 		sprites = [];
 		
@@ -71,7 +52,8 @@ gameMain.prototype = {
 			LEFT: 7,
 			SPACE: 9,
 			METRONOME: 120,
-			OUTPUTS: 0
+			OUTPUTS: 0,
+			UNLOCK: function(){ watchAd(); }
 		};
 		    	
     	rTxt = this.add.text(makey.x + 325, makey.y + 150, notes[config.RIGHT], {
@@ -90,18 +72,16 @@ gameMain.prototype = {
 	        font: '24px', fill: '#000000', 
 	    });
 
-        useClick = this.add.text(40, 420, '* Plug your MakeyMakey to a mobile devcie using an USB 2.0 adapter\n* Tap the makey inputs on the image below to test the sounds\n* "Click" does not receive an output, "Q" plays random notes\n* Reamp at makeymakey.com/pages/remap', {
+        useClick = this.add.text(20, 880, "* Plug your MakeyMakey to a mobile devcie using an USB 2.0 adapter\n* Choose an instrument & tempo, try out a song or choose specific notes\n* Tap the makey inputs on the image above to test the sounds\n* Click doesn't receive a note (used by the UI), Q plays random notes\n* Reamp at makeymakey.com/pages/remap", {
 	        font: '24px', fill: '#ffa', 
 	    });
 	    useClick.x = game.world.centerX - useClick.width / 2;
 	    
-        adText = this.add.text(chestBtn.x + 145, chestBtn.y + 12, 'Watch ad =\nallows to change to any note +\nsupport further development!', {
-	        font: '23px', fill: '#fff', 
-	    });
-
 	    startGUI();
 		
 		setTimeout(function(){
+			initAd();
+			
 	        try{
 	            window.plugins.insomnia.keepAwake();
 	        } catch(e){}
@@ -137,8 +117,10 @@ function startGUI(){
     
     gui.add(config, 'METRONOME', 60, 360).name('Metronome BPM').step(5);
     
-    btn = document.getElementsByClassName('close-button')[0].style.visibility = 'hidden';
+    unlockBtn = gui.add(config, 'UNLOCK').name('* Unlock notes change & support development (one ad) *');
+
     document.getElementsByClassName('dg')[1].style.cssFloat = 'left';
+    document.getElementsByClassName('property-name')[4].style.width = '300px';
 }
 
 function testSounds(_this, _k){
@@ -180,16 +162,16 @@ function playSound(_n){
 }
 
 function lightKey(_this){
-	game.add.tween(_this).to( { alpha: 1 }, 300 - config.METRONOME, "Linear", true);
+	game.add.tween(_this).to( { alpha: 1 }, 400 - config.METRONOME, "Linear", true);
 	
 	setTimeout(function(){
-		game.add.tween(_this).to( { alpha: 0 }, 300 - config.METRONOME, "Linear", true);
+		game.add.tween(_this).to( { alpha: 0 }, 400 - config.METRONOME, "Linear", true);
 	}, 60000 / config.METRONOME);
 	
-	game.add.tween(makey).to( { alpha: 0.7 }, 300 - config.METRONOME, "Linear", true);
+	game.add.tween(makey).to( { alpha: 0.7 }, 400 - config.METRONOME, "Linear", true);
 	
 	setTimeout(function(){
-		game.add.tween(makey).to( { alpha: 1 }, 300 - config.METRONOME, "Linear", true);
+		game.add.tween(makey).to( { alpha: 1 }, 400 - config.METRONOME, "Linear", true);
 	}, 60000 / config.METRONOME);
 }
 
@@ -308,7 +290,11 @@ function watchAd(){
 	    gui.add(config, 'SPACE', 
 	    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('SPACE note').onFinishChange(updateText);
 		
+		gui.remove(unlockBtn);
+		
 		notWatched = false;
+		
+		AdMob.showInterstitial();
 	}
 }
 
@@ -320,14 +306,15 @@ function updateText(){
 	sTxt.text = notes[config.SPACE];
 }
 
-function updateDropdown(target, list){   
-    innerHTMLStr = "";
-    for(var i=0; i<list.length; i++){
-        var str = "<option value='" + list[i] + "'>" + list[i] + "</option>";
-        innerHTMLStr += str;        
-    }
+function initAd(){
+    admobid = {
+        interstitial: 'ca-app-pub-9795366520625065/5937422115'
+    };
 
-    if (innerHTMLStr != "") target.domElement.children[0].innerHTML = innerHTMLStr;
+  	if(AdMob) AdMob.prepareInterstitial({
+  		adId: admobid.interstitial, 
+  		autoShow: false
+  	});
 }
 
 function offSets(){	
