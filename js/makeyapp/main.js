@@ -13,7 +13,7 @@ var gameMain = function(game){
 	songs = {
 		'Default': 'None',
 		'Twinkle': [0, 0, 7, 7, 9, 9, 7, 5, 5, 4, 4, 2, 2, 0],
-		'macdonald': [7, 7, 7, 2, 4, 4, 2, 11, 11, 9, 9, 7],
+		'Macdonald': [7, 7, 7, 2, 4, 4, 2, 11, 11, 9, 9, 7],
 		'Susanna': [0, 2, 4, 7, 7, 9, 7, 4, 0, 2, 4, 4, 2, 0, 2, 0, 2, 4, 7, 7, 9, 7, 4, 0, 2, 4, 4, 2, 2, 0]
 	};
 	
@@ -106,11 +106,11 @@ function startGUI(){
     gui = new dat.GUI({ width: 300 });
   
     gui.add(config, 'INSTRUMENT', 
-    { "Vibes": 0, "Harp": 1, "Pan Flute" : 2, "Xylophone": 3, "Glock": 4, "Metal Percussions": 5, "Log": 6,
+    { "Vibraphone": 0, "Harp": 1, "Pan Flute" : 2, "Xylophone": 3, "Glockenspiel": 4, "Metal Percussions": 5, "Log": 6,
     "Pizzicato": 7, "Kalimba": 8, "Oud": 9, "Drums": 10, "Bass Guitar": 11, "Tuba": 12  }).name('Instrument') ;
 
     gui.add(config, 'SONG', 
-    { 'None': 'None', 'Twinkle': 'Twinkle', 'macdonald': 'macdonald', 'Susanna': 'Susanna'}).name('Song');
+    { 'None': 'None', 'Twinkle': 'Twinkle', 'Macdonald': 'Macdonald', 'Susanna': 'Susanna'}).name('Song').onFinishChange(function(){note_n = 0;});
 
     gui.add(config, 'OUTPUTS', 
     { 'DEFAULT': 0, 'W E R T Y': 1, 'U I O P A': 2, 'S D F G H': 3, 'J K L Z X': 4, 'C V B N M': 5, '1 2 3 4 5': 6}).name('Outputs');
@@ -134,7 +134,7 @@ function playSound(_n){
 		lightKey(sprites[_n]);
 		
 		if (allInstruments.indexOf(allInstruments[config.INSTRUMENT]) > -1){
-			if (config.SONG == 'None'){
+			if (config.SONG == 'None' || allInstruments[config.INSTRUMENT] == metals || allInstruments[config.INSTRUMENT] == drums){
 				if (allInstruments[config.INSTRUMENT] != metals && allInstruments[config.INSTRUMENT] != drums){
 					_instru.play(parseInt(config[Object.keys(config)[_n + 2]]) + 1, 1); // _n + 2 is the index of the pressed key in the config object
 				}
@@ -143,13 +143,12 @@ function playSound(_n){
 				}
 			}
 			else{
-				if (note_n < songs[config.SONG].length){
-					_instru.play(songs[config.SONG][note_n] + 1, 1);
-					note_n++;
-				}
-				else{
+				if (note_n == songs[config.SONG].length){
 					note_n = 0;
 				}
+				
+				_instru.play(songs[config.SONG][note_n] + 1, 1);
+				note_n++;
 			}
 		}
 
@@ -190,7 +189,7 @@ function loadInstruments(){
 	log = game.add.audioSprite('log');
 	kalimba = game.add.audioSprite('kalimba');
 
-    allInstruments = [vibes, harp, pan, xylo, glock, metals, log, pizz, kalimba];   
+    allInstruments = [vibes, harp, pan, xylo, glock, metals, log, pizz, kalimba, oud, drums, bass, tuba];   
 }
 
 function assignKeys(){
