@@ -293,7 +293,7 @@ function watchAd(){
 		
 		notWatched = false;
 		
-		AdMob.showInterstitial();
+		//AdMob.showInterstitial();
 	}
 }
 
