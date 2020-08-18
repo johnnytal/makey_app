@@ -52,8 +52,8 @@ gameMain.prototype = {
 			LEFT: 7,
 			SPACE: 9,
 			METRONOME: 120,
-			OUTPUTS: 0,
-			UNLOCK: function(){ watchAd(); }
+			OUTPUTS: 0
+			//UNLOCK: function(){ watchAd(); }
 		};
 		    	
     	rTxt = this.add.text(makey.x + 325, makey.y + 150, notes[config.RIGHT], {
@@ -116,11 +116,26 @@ function startGUI(){
     { 'DEFAULT': 0, 'W E R T Y': 1, 'U I O P A': 2, 'S D F G H': 3, 'J K L Z X': 4, 'C V B N M': 5, '1 2 3 4 5': 6}).name('Outputs');
     
     gui.add(config, 'METRONOME', 60, 360).name('Metronome BPM').step(5);
-    
-    unlockBtn = gui.add(config, 'UNLOCK').name('* Unlock notes change & support development (one ad) *');
 
+    gui.add(config, 'UP', 
+    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('UP note').onFinishChange(updateText);
+     
+    gui.add(config, 'DOWN', 
+    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('DOWN note').onFinishChange(updateText);
+     
+    gui.add(config, 'RIGHT', 
+    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('RIGHT note').onFinishChange(updateText);
+    
+    gui.add(config, 'LEFT', 
+    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('LEFT note').onFinishChange(updateText);    
+    
+    gui.add(config, 'SPACE', 
+    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('SPACE note').onFinishChange(updateText);
+	 
+	//unlockBtn = gui.add(config, 'UNLOCK').name('* Unlock notes change & support development (one ad) *');
     document.getElementsByClassName('dg')[1].style.cssFloat = 'left';
-    document.getElementsByClassName('property-name')[4].style.width = '300px';
+    
+ //   document.getElementsByClassName('property-name')[4].style.width = '300px';
 }
 
 function testSounds(_this, _k){
@@ -272,7 +287,7 @@ function assignKeys(){
 	soundId = ['up', 'down', 'right', 'left', 'space', 'click'];
 }
 
-function watchAd(){
+/*function watchAd(){
 	if (notWatched){
 	    gui.add(config, 'UP', 
 	    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('UP note').onFinishChange(updateText);
@@ -295,7 +310,7 @@ function watchAd(){
 		
 		//AdMob.showInterstitial();
 	}
-}
+}*/
 
 function updateText(){
 	rTxt.text = notes[config.RIGHT];
@@ -307,9 +322,16 @@ function updateText(){
 
 function initAd(){
     admobid = {
+    	banner: 'ca-app-pub-9795366520625065/3332575542',
         interstitial: 'ca-app-pub-9795366520625065/5937422115'
     };
-
+    
+ 	if(AdMob) AdMob.createBanner({
+  	  	adId: admobid.banner,
+  	  	position: AdMob.AD_POSITION.BOTTOM_CENTER,
+  	  	autoShow: true
+  	});
+  	
   	if(AdMob) AdMob.prepareInterstitial({
   		adId: admobid.interstitial, 
   		autoShow: false
