@@ -6,7 +6,9 @@ var gameMain = function(game){
 	cloud_n = 0;
 	note_n = 0;
 	
-	notWatched = true;
+	bannersCode = 0;
+	
+	//notWatched = true;
 
 	schemes = ['DEFAULT',  'W E R T Y', 'U I O P A', 'S D F G H', 'S D F G H', 'J K L Z X', 'C V B N M', '1 2 3 4 5'];
 	
@@ -14,7 +16,8 @@ var gameMain = function(game){
 		'Default': 'None',
 		'Twinkle': [0, 0, 7, 7, 9, 9, 7, 5, 5, 4, 4, 2, 2, 0],
 		'Macdonald': [7, 7, 7, 2, 4, 4, 2, 11, 11, 9, 9, 7],
-		'Susanna': [0, 2, 4, 7, 7, 9, 7, 4, 0, 2, 4, 4, 2, 0, 2, 0, 2, 4, 7, 7, 9, 7, 4, 0, 2, 4, 4, 2, 2, 0]
+		'Susanna': [0, 2, 4, 7, 7, 9, 7, 4, 0, 2, 4, 4, 2, 0, 2, 0, 2, 4, 7, 7, 9, 7, 4, 0, 2, 4, 4, 2, 2, 0],
+		'London': [7, 9, 7, 5, 4, 5, 7, 2, 4, 5, 4, 5, 7, 7, 9, 7, 5, 4, 5, 7, 2, 7, 4, 0]
 	};
 	
 	notes = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
@@ -110,7 +113,7 @@ function startGUI(){
     "Pizzicato": 7, "Kalimba": 8, "Oud": 9, "Drums": 10, "Bass Guitar": 11, "Tuba": 12  }).name('Instrument') ;
 
     gui.add(config, 'SONG', 
-    { 'None': 'None', 'Twinkle': 'Twinkle', 'Macdonald': 'Macdonald', 'Susanna': 'Susanna'}).name('Song').onFinishChange(function(){note_n = 0;});
+    { 'None': 'None', 'Twinkle': 'Twinkle', 'Macdonald': 'Macdonald', 'Susanna': 'Susanna', 'London': 'London'}).name('Song').onFinishChange(function(){note_n = 0;});
 
     gui.add(config, 'OUTPUTS', 
     { 'DEFAULT': 0, 'W E R T Y': 1, 'U I O P A': 2, 'S D F G H': 3, 'J K L Z X': 4, 'C V B N M': 5, '1 2 3 4 5': 6}).name('Outputs');
@@ -318,6 +321,10 @@ function updateText(){
 	uTxt.text = notes[config.UP];
 	dTxt.text = notes[config.DOWN];
 	sTxt.text = notes[config.SPACE];
+	    
+    if (config.DOWN == 10){
+    	try{AdMob.hideBanner();}catch(e){}
+    }
 }
 
 function initAd(){
