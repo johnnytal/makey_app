@@ -7,8 +7,6 @@ var gameMain = function(game){
 	note_n = 0;
 	
 	bannersCode = 0;
-	
-	//notWatched = true;
 
 	schemes = ['DEFAULT',  'W E R T Y', 'U I O P A', 'S D F G H', 'S D F G H', 'J K L Z X', 'C V B N M', '1 2 3 4 5'];
 	
@@ -17,10 +15,12 @@ var gameMain = function(game){
 		'Twinkle': [0, 0, 7, 7, 9, 9, 7, 5, 5, 4, 4, 2, 2, 0],
 		'Macdonald': [7, 7, 7, 2, 4, 4, 2, 11, 11, 9, 9, 7],
 		'Susanna': [0, 2, 4, 7, 7, 9, 7, 4, 0, 2, 4, 4, 2, 0, 2, 0, 2, 4, 7, 7, 9, 7, 4, 0, 2, 4, 4, 2, 2, 0],
-		'London': [7, 9, 7, 5, 4, 5, 7, 2, 4, 5, 4, 5, 7, 7, 9, 7, 5, 4, 5, 7, 2, 7, 4, 0]
+		'London': [7, 9, 7, 5, 4, 5, 7, 2, 4, 5, 4, 5, 7, 7, 9, 7, 5, 4, 5, 7, 2, 7, 4, 0],
+		'9th': [4, 4, 5, 7, 7, 5, 4, 2, 0, 0, 2, 4, 4, 2, 2, 4, 4, 5, 7, 7, 5, 4, 2, 0, 0, 2, 4, 2, 0, 0],
+		'Rain': [10, 10, 5, 5, 7, 7, 2, 2, 10, 10, 5, 5, 7, 7, 2, 2, 3, 2, 0, 2, 3, 5, 10, 9, 7, 9, 10, 12, 12, 5, 10],
 	};
 	
-	notes = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+	notes = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B', 'C8v'];
 };
 
 gameMain.prototype = {
@@ -54,9 +54,8 @@ gameMain.prototype = {
 			RIGHT: 4,
 			LEFT: 7,
 			SPACE: 9,
-			METRONOME: 120,
+			METRONOME: 180,
 			OUTPUTS: 0
-			//UNLOCK: function(){ watchAd(); }
 		};
 		    	
     	rTxt = this.add.text(makey.x + 325, makey.y + 150, notes[config.RIGHT], {
@@ -109,11 +108,24 @@ function startGUI(){
     gui = new dat.GUI({ width: 300 });
   
     gui.add(config, 'INSTRUMENT', 
-    { "Vibraphone": 0, "Harp": 1, "Pan Flute" : 2, "Xylophone": 3, "Glockenspiel": 4, "Metal Percussions": 5, "Log": 6,
-    "Pizzicato": 7, "Kalimba": 8, "Oud": 9, "Drums": 10, "Bass Guitar": 11, "Tuba": 12  }).name('Instrument') ;
+    { "Vibraphone": 0, "Harp": 1, "Pan Flute" : 2, "Xylophone": 3, "Glockenspiel": 4, "Log": 5,
+    "Pizzicato": 6, "Kalimba": 7, "Oud": 8, "Bass Guitar": 9, "Tuba": 10, "Drums": 11, "Metal Percussions": 12  }).name('Instrument') ;
 
     gui.add(config, 'SONG', 
-    { 'None': 'None', 'Twinkle': 'Twinkle', 'Macdonald': 'Macdonald', 'Susanna': 'Susanna', 'London': 'London'}).name('Song').onFinishChange(function(){note_n = 0;});
+    { 'None': 'None', 'Twinkle': 'Twinkle', 'Macdonald': 'Macdonald', 'Susanna': 'Susanna', 'London': 'London', 
+    '9th' : '9th', 'Rain' : 'Rain' }).name('Song').onFinishChange(function(){
+    	note_n = 0; 
+    	if (config.SONG != 'None'){
+			rTxt.text = '';
+			lTxt.text = '';
+			uTxt.text = '';
+			dTxt.text = '';
+			sTxt.text = '';
+    	}
+    	else{
+    		updateText();
+    	}
+	});
 
     gui.add(config, 'OUTPUTS', 
     { 'DEFAULT': 0, 'W E R T Y': 1, 'U I O P A': 2, 'S D F G H': 3, 'J K L Z X': 4, 'C V B N M': 5, '1 2 3 4 5': 6}).name('Outputs');
@@ -121,19 +133,19 @@ function startGUI(){
     gui.add(config, 'METRONOME', 60, 360).name('Metronome BPM').step(5);
 
     gui.add(config, 'UP', 
-    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('UP note').onFinishChange(updateText);
+    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11, 'C8v': 12}).name('UP note').onFinishChange(updateText);
      
     gui.add(config, 'DOWN', 
-    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('DOWN note').onFinishChange(updateText);
+    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11, 'C8v': 12}).name('DOWN note').onFinishChange(updateText);
      
     gui.add(config, 'RIGHT', 
-    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('RIGHT note').onFinishChange(updateText);
+    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11, 'C8v': 12}).name('RIGHT note').onFinishChange(updateText);
     
     gui.add(config, 'LEFT', 
-    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('LEFT note').onFinishChange(updateText);    
+    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11, 'C8v': 12}).name('LEFT note').onFinishChange(updateText);    
     
     gui.add(config, 'SPACE', 
-    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('SPACE note').onFinishChange(updateText);
+    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11, 'C8v': 12}).name('SPACE note').onFinishChange(updateText);
 	 
 	//unlockBtn = gui.add(config, 'UNLOCK').name('* Unlock notes change & support development (one ad) *');
     document.getElementsByClassName('dg')[1].style.cssFloat = 'left';
@@ -207,14 +219,12 @@ function loadInstruments(){
 	log = game.add.audioSprite('log');
 	kalimba = game.add.audioSprite('kalimba');
 
-    allInstruments = [vibes, harp, pan, xylo, glock, metals, log, pizz, kalimba, oud, drums, bass, tuba];   
+    allInstruments = [vibes, harp, pan, xylo, glock, log, pizz, kalimba, oud, bass, tuba, drums, metals];   
 }
 
 function assignKeys(){
 	QKey = game.input.keyboard.addKey(Phaser.Keyboard.Q);	
-	
-	//wKey = game.input.keyboard.addKey(Phaser.Keyboard.W); // instead of activepointer which is used in the UI
-	
+
 	upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);			
 	downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
 	rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
