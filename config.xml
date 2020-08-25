@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-		<widget id="phonegap.ilyich.makeyApp" version="2.2" android-versionCode="200002" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+		<widget id="phonegap.ilyich.makeyApp" version="2.3" android-versionCode="200003" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
 		<name>MakeyMakey Instruments</name>
 		<description>Cahnge sound and keyboard schemes</description>
 		<author email="johnnytal9@gmail.com" href="http://www.ilyichgames.com"> Johnny Tal </author>
@@ -34,6 +34,7 @@
 		<plugin name="cordova-plugin-whitelist" version="1"/>
 		<plugin name="cordova-plugin-insomnia" spec="*"/>
 		<plugin name="cordova-plugin-statusbar" spec="*"/>
+		<plugin name="cordova-plugin-android-volume" spec="*"/>
 		
 		<plugin name="cordova-plugin-admobpro" source="npm">
 			<variable name="ADMOB_APP_ID" value="ca-app-pub-9795366520625065~2171058181" />

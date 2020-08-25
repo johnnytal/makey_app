@@ -5,8 +5,6 @@ var gameMain = function(game){
 	config = {};
 	cloud_n = 0;
 	note_n = 0;
-	
-	bannersCode = 0;
 
 	schemes = ['DEFAULT',  'W E R T Y', 'U I O P A', 'S D F G H', 'S D F G H', 'J K L Z X', 'C V B N M', '1 2 3 4 5'];
 	
@@ -29,7 +27,7 @@ gameMain.prototype = {
     	
     	makey = game.add.sprite(0, 0, 'makey');
     	makey.x = game.world.centerX - makey.width / 2;
-    	makey.y = game.world.centerY - makey.height / 2 + 110;
+    	makey.y = game.world.centerY - makey.height / 2 + 130;
 
 		keys = ['up', 'down', 'right', 'left', 'space', 'click'];
 		sprites = [];
@@ -54,25 +52,19 @@ gameMain.prototype = {
 			RIGHT: 4,
 			LEFT: 7,
 			SPACE: 9,
-			METRONOME: 180,
+			METRONOME: 120,
 			OUTPUTS: 0
 		};
+		
+		if (localStorage.getItem("outputs") != null){
+			config.OUTPUTS = localStorage.getItem("outputs");
+		}
 		    	
-    	rTxt = this.add.text(makey.x + 325, makey.y + 150, notes[config.RIGHT], {
-	        font: '24px', fill: '#000000', 
-	    });
-    	lTxt = this.add.text(makey.x + 33, makey.y + 150, notes[config.LEFT], {
-	        font: '24px', fill: '#000000', 
-	    });
-    	uTxt = this.add.text(makey.x + 118, makey.y + 50, notes[config.UP], {
-	        font: '24px', fill: '#000000', 
-	    });
-    	dTxt = this.add.text(makey.x + 118, makey.y + 240, notes[config.DOWN], {
-	        font: '24px', fill: '#000000', 
-	    });
-    	sTxt = this.add.text(makey.x + 432, makey.y + 50, notes[config.SPACE], {
-	        font: '24px', fill: '#000000', 
-	    });
+    	rTxt = this.add.text(makey.x + 325, makey.y + 150, notes[config.RIGHT], {font: '24px', fill: '#000000'});
+    	lTxt = this.add.text(makey.x + 33, makey.y + 150, notes[config.LEFT], {font: '24px', fill: '#000000'});
+    	uTxt = this.add.text(makey.x + 118, makey.y + 50, notes[config.UP], {font: '24px', fill: '#000000'});
+    	dTxt = this.add.text(makey.x + 118, makey.y + 240, notes[config.DOWN], {font: '24px', fill: '#000000'});
+    	sTxt = this.add.text(makey.x + 432, makey.y + 50, notes[config.SPACE], {font: '24px', fill: '#000000'});
 
         useClick = this.add.text(20, 880, "* Plug your MakeyMakey to a mobile devcie using an USB 2.0 adapter\n* Choose an instrument & tempo, try out a song or choose specific notes\n* Tap the makey inputs on the image above to test the sounds\n* Click doesn't receive a note (used by the UI), Q plays random notes\n* Reamp at makeymakey.com/pages/remap", {
 	        font: '24px', fill: '#ffa', 
@@ -82,15 +74,12 @@ gameMain.prototype = {
 	    startGUI();
 		
 		setTimeout(function(){
-			initAd();
-			
-	        try{
-	            window.plugins.insomnia.keepAwake();
-	        } catch(e){}
-	        try{
-	           StatusBar.hide();
-	        } catch(e){}
-        }, 1000); 
+	        try{window.plugins.insomnia.keepAwake();} catch(e){}
+	        try{StatusBar.hide();} catch(e){}
+	        try{window.androidVolume.setMusic(100, false);} catch(e){}
+	        
+    		initAd();
+        }, 500); 
     },
     update: function(){ 
     	for (n = 0; n < allcloudArrays[config.OUTPUTS].length; n++){
@@ -98,6 +87,7 @@ gameMain.prototype = {
 				playSound(n);
 			}
 	    }
+	    
 	    if (QKey.isDown){
 	    	playSound(game.rnd.integerInRange(0,4));
 	    }
@@ -105,31 +95,29 @@ gameMain.prototype = {
 };
 
 function startGUI(){
-    gui = new dat.GUI({ width: 300 });
+    gui = new dat.GUI({ width: 300, hideable: false });
   
     gui.add(config, 'INSTRUMENT', 
-    { "Vibraphone": 0, "Harp": 1, "Pan Flute" : 2, "Xylophone": 3, "Glockenspiel": 4, "Log": 5,
-    "Pizzicato": 6, "Kalimba": 7, "Oud": 8, "Bass Guitar": 9, "Tuba": 10, "Drums": 11, "Metal Percussions": 12  }).name('Instrument') ;
+    { "Xylophone": 0, "Kalimba": 1, "Harp" : 2, "Pan Flute": 3, "Vibraphone": 4, "Pizzicato": 5,
+    "Glockenspiel": 6, "Log": 7, "Oud": 8, "Bass Guitar": 9, "Tuba": 10, "Drums": 11, "Metal Percussions": 12  }).name('Instrument') ;
 
+    gui.add(config, 'OUTPUTS', 
+    { 'DEFAULT': 0, 'W E R T Y': 1, 'U I O P A': 2, 'S D F G H': 3, 'J K L Z X': 4, 'C V B N M': 5, '1 2 3 4 5': 6}).name('Outputs').onFinishChange(function(){
+	    localStorage.setItem("outputs", config.OUTPUTS);
+	});
+    
     gui.add(config, 'SONG', 
     { 'None': 'None', 'Twinkle': 'Twinkle', 'Macdonald': 'Macdonald', 'Susanna': 'Susanna', 'London': 'London', 
     '9th' : '9th', 'Rain' : 'Rain' }).name('Song').onFinishChange(function(){
     	note_n = 0; 
     	if (config.SONG != 'None'){
-			rTxt.text = '';
-			lTxt.text = '';
-			uTxt.text = '';
-			dTxt.text = '';
-			sTxt.text = '';
+			rTxt.text = ''; lTxt.text = ''; uTxt.text = ''; dTxt.text = ''; sTxt.text = '';
     	}
     	else{
     		updateText();
     	}
 	});
 
-    gui.add(config, 'OUTPUTS', 
-    { 'DEFAULT': 0, 'W E R T Y': 1, 'U I O P A': 2, 'S D F G H': 3, 'J K L Z X': 4, 'C V B N M': 5, '1 2 3 4 5': 6}).name('Outputs');
-    
     gui.add(config, 'METRONOME', 60, 360).name('Metronome BPM').step(5);
 
     gui.add(config, 'UP', 
@@ -146,11 +134,8 @@ function startGUI(){
     
     gui.add(config, 'SPACE', 
     { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11, 'C8v': 12}).name('SPACE note').onFinishChange(updateText);
-	 
-	//unlockBtn = gui.add(config, 'UNLOCK').name('* Unlock notes change & support development (one ad) *');
+
     document.getElementsByClassName('dg')[1].style.cssFloat = 'left';
-    
- //   document.getElementsByClassName('property-name')[4].style.width = '300px';
 }
 
 function testSounds(_this, _k){
@@ -160,9 +145,7 @@ function testSounds(_this, _k){
 function playSound(_n){
 	if (allCloudResets[config.OUTPUTS][_n]){
 		_instru = allInstruments[config.INSTRUMENT];
-		
-		lightKey(sprites[_n]);
-		
+
 		if (allInstruments.indexOf(allInstruments[config.INSTRUMENT]) > -1){
 			if (config.SONG == 'None' || allInstruments[config.INSTRUMENT] == metals || allInstruments[config.INSTRUMENT] == drums){
 				if (allInstruments[config.INSTRUMENT] != metals && allInstruments[config.INSTRUMENT] != drums){
@@ -187,6 +170,8 @@ function playSound(_n){
 		setTimeout(function(){
 			allCloudResets[config.OUTPUTS][_n] = true;
 		}, 60000 / config.METRONOME);
+		
+		lightKey(sprites[_n]);
 	}
 }
 
@@ -219,7 +204,7 @@ function loadInstruments(){
 	log = game.add.audioSprite('log');
 	kalimba = game.add.audioSprite('kalimba');
 
-    allInstruments = [vibes, harp, pan, xylo, glock, log, pizz, kalimba, oud, bass, tuba, drums, metals];   
+    allInstruments = [xylo, kalimba, harp, pan, vibes, pizz, glock, log, oud, bass, tuba, drums, metals];   
 }
 
 function assignKeys(){
@@ -300,31 +285,6 @@ function assignKeys(){
 	soundId = ['up', 'down', 'right', 'left', 'space', 'click'];
 }
 
-/*function watchAd(){
-	if (notWatched){
-	    gui.add(config, 'UP', 
-	    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('UP note').onFinishChange(updateText);
-	     
-	    gui.add(config, 'DOWN', 
-	    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('DOWN note').onFinishChange(updateText);
-	     
-	    gui.add(config, 'RIGHT', 
-	    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('RIGHT note').onFinishChange(updateText);
-	    
-	    gui.add(config, 'LEFT', 
-	    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('LEFT note').onFinishChange(updateText);    
-	    
-	    gui.add(config, 'SPACE', 
-	    { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11}).name('SPACE note').onFinishChange(updateText);
-		
-		gui.remove(unlockBtn);
-		
-		notWatched = false;
-		
-		//AdMob.showInterstitial();
-	}
-}*/
-
 function updateText(){
 	rTxt.text = notes[config.RIGHT];
 	lTxt.text = notes[config.LEFT];
@@ -332,26 +292,20 @@ function updateText(){
 	dTxt.text = notes[config.DOWN];
 	sTxt.text = notes[config.SPACE];
 	    
-    if (config.DOWN == 10){
+    if (config.UP == 1){
     	try{AdMob.hideBanner();}catch(e){}
     }
 }
 
 function initAd(){
     admobid = {
-    	banner: 'ca-app-pub-9795366520625065/3332575542',
-        interstitial: 'ca-app-pub-9795366520625065/5937422115'
+    	banner: 'ca-app-pub-9795366520625065/3332575542'
     };
     
  	if(AdMob) AdMob.createBanner({
   	  	adId: admobid.banner,
   	  	position: AdMob.AD_POSITION.BOTTOM_CENTER,
   	  	autoShow: true
-  	});
-  	
-  	if(AdMob) AdMob.prepareInterstitial({
-  		adId: admobid.interstitial, 
-  		autoShow: false
   	});
 }
 

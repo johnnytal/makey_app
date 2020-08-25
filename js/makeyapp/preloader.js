@@ -3,13 +3,13 @@ var preloader = function(game){};
 preloader.prototype = {
     preload: function(){ 
     	progressTxt = this.progress = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 30, '0%',{
-             font: '25px', fill: 'white', fontWeight: 'normal', align: 'center'
+             font: '25px', fill: 'white', align: 'center'
         });
         this.progress.anchor.setTo(0.5, 0.5);
         this.game.load.onFileComplete.add(this.fileComplete, this);
   
         loadingTxt = this.add.text(this.game.world.centerX - 37,  this.game.world.centerY - 150, "Loading...", {
-            font: '18px', fill: 'lightgrey', fontWeight: 'normal', align: 'center'
+            font: '18px', fill: 'lightgrey', align: 'center'
         });
      
         game.load.image('makey', 'assets/makey/images/makey.png');

@@ -2,7 +2,7 @@ document.addEventListener("deviceready", start, false);
 document.addEventListener("pause", onPause, false);
 document.addEventListener("resume", onResume, false);
 
-//window.onload = start;
+window.onload = start;
 
 function start(){ 
     WIDTH = 850; 
@@ -40,7 +40,6 @@ boot.prototype = {
 };
 
 function loadJson(){
-	
 	audioVibes = {
 	    spritemap: {
 	        1 : { start: 0, end: FACTOR, loop: false },
@@ -270,5 +269,5 @@ function onResume(){
         	window.plugins.insomnia.keepAwake();
             StatusBar.hide();
         }catch(e){}   
-    }, 1000);
+    }, 500);
 }
