@@ -2,6 +2,16 @@ document.addEventListener("deviceready", start, false);
 document.addEventListener("pause", onPause, false);
 document.addEventListener("resume", onResume, false);
 
+document.addEventListener("backbutton", function (e) {
+    e.preventDefault();
+}, false);
+document.addEventListener("menubutton", function (e) {
+    e.preventDefault();
+}, false);
+document.addEventListener("searchbutton", function (e) {
+    e.preventDefault();
+}, false);
+
 //window.onload = start;
 
 function start(){ 
