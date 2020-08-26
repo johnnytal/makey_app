@@ -78,7 +78,7 @@ gameMain.prototype = {
 	        try{StatusBar.hide();} catch(e){}
 	        try{window.androidVolume.setMusic(100, false);} catch(e){}
 	        
-    		initAd();
+    		//initAd();
         }, 500); 
     },
     update: function(){ 
